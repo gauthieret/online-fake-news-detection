@@ -3,13 +3,13 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 import numpy as np
 
 
-def train_model(X: np.ndarray):
+def train_vect(X: np.ndarray):
 
     tfidf_vectorizer = TfidfVectorizer(max_df=0.7)
     tfidf = tfidf_vectorizer.fit(X)
     return tfidf
 
-def transform_model(X: np.ndarray):
+def transform_vect(X: np.ndarray):
 
     tfidf_vectorizer = TfidfVectorizer(max_df=0.7)
     tfidf = tfidf_vectorizer.transform(X)
