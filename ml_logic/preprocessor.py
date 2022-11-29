@@ -9,15 +9,16 @@ import pandas as pd
 from sklearn.linear_model import PassiveAggressiveClassifier
 from sklearn.feature_extraction.text import TfidfVectorizer
 import numpy as np
-from ml_logic.params import TARGET_COLUMN
+from ml_logic.params import TARGET_COLUMN, TRUE_LOCAL_PATH, FAKE_LOCAL_PATH
 
 
 
 
 
-def merge(true_df: pd.DataFrame, fake_df: pd.DataFrame):
-
-    articles_df = pd.merge(true_df,fake_df, 'outer')
+def get_data(TRUE_LOCAL_PATH, FAKE_LOCAL_PATH):
+    fake_df = pd.read_csv(FAKE_LOCAL_PATH)
+    true_df = pd.read_csv(TRUE_LOCAL_PATH)
+    articles_df = pd.concat([true_df, fake_df])
 
     return articles_df
 
@@ -30,7 +31,7 @@ def preparation(df):
 
 
 
-def preproc_column(sentence):
+def clean(sentence):
 
     # Basic cleaning
     sentence = sentence.strip() ## remove whitespaces
@@ -66,9 +67,9 @@ def X_y(df, TARGET_COLUMN):
     y = df[TARGET_COLUMN]
     return X, y
 
-def split_data(tuple):
+def split_data(X, y):
 
-    X_train, X_test, y_train, y_test = train_test_split(tuple[0], tuple[1],\
+    X_train, X_test, y_train, y_test = train_test_split(X, y,\
         test_size=0.3, random_state=0, shuffle=True)
 
     return X_train, X_test, y_train, y_test
