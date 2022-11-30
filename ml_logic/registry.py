@@ -4,7 +4,7 @@ import os
 import glob
 from joblib import dump, load
 
-LOCAL_REGISTRY_PATH = '..'
+
 
 def save_model (model = None):
 
