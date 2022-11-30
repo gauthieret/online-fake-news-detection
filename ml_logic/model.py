@@ -3,18 +3,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 import numpy as np
 
 
-def train_vect(X: np.ndarray):
 
-    tfidf_vectorizer = TfidfVectorizer(max_df=0.7)
-    tfidf = tfidf_vectorizer.fit(X)
-    return tfidf
-
-def transform_vect(X: np.ndarray):
-
-    tfidf_vectorizer = TfidfVectorizer(max_df=0.7)
-    tfidf = tfidf_vectorizer.transform(X)
-
-    return tfidf
 
 def pa_classifier_fit(tfidf_train, y_train):
 
