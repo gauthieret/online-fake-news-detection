@@ -5,7 +5,7 @@ from ml_logic.registry import *
 from ml_logic.model import *
 
 
-def split_data(raw_data):
+def prep_split_data(raw_data):
 
     selected_columns = preparation(raw_data)
 
@@ -26,8 +26,12 @@ def train(X, y):
 
     return
 
-def predict(X_test):
+def predict(X_pred):
 
-    y_pred = pipeline.predict(X_test)
+    model = load_model()
+
+    X_pred = preparation(X_pred)
+
+    y_pred = model.predict(X_pred)
 
     return y_pred
