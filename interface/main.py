@@ -1,7 +1,8 @@
 from ml_logic.preprocessor import *
 from ml_logic.encoders import *
 from ml_logic.params import TARGET_COLUMN
-
+from ml_logic.registry import *
+from ml_logic.model import *
 
 
 def split_data(raw_data):
@@ -15,17 +16,18 @@ def split_data(raw_data):
     return X_train, X_test, y_train, y_test
 
 def train(X, y):
+    model = load_model()
+    if model is None:
+        model = initialize_model()
 
-    pipeline.fit(X, y)
+    model.fit(X, y)
 
-    return pipeline
+    save_model(model=model)
+
+    return
 
 def predict(X_test):
 
-    pipeline.predict(X_train, y_train)
+    y_pred = pipeline.predict(X_test)
 
-    return model_trained
-
-def predict(new_data):
-
-     = pipe.predict(new_data)
+    return y_pred
