@@ -19,6 +19,8 @@ stop_words = set(stopwords.words('english')) ## define stopwords
 def get_data(TRUE_LOCAL_PATH, FAKE_LOCAL_PATH):
     fake_df = pd.read_csv(FAKE_LOCAL_PATH)
     true_df = pd.read_csv(TRUE_LOCAL_PATH)
+    TRUE_LOCAL_PATH['True'] = 1
+    FAKE_LOCAL_PATH['True'] = 0
     articles_df = pd.concat([true_df, fake_df])
 
     return articles_df
