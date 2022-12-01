@@ -7,9 +7,7 @@ from ml_logic.model import *
 
 def prep_split_data(raw_data):
 
-    selected_columns = preparation(raw_data)
-
-    X, y = X_y(selected_columns, TARGET_COLUMN)
+    X, y = X_y(raw_data, TARGET_COLUMN)
 
     X_train, X_test, y_train, y_test = split_data(X, y)
 
@@ -29,8 +27,6 @@ def train(X, y):
 def predict(X_pred):
 
     model = load_model()
-
-    X_pred = preparation(X_pred)
 
     y_pred = model.predict(X_pred)
 

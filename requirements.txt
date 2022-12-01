@@ -33,3 +33,4 @@ termcolor
 string
 nltk
 unidecode
+trafilatura
