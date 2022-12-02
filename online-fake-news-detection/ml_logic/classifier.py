@@ -9,4 +9,4 @@ def label(prediction_score):
         if prediction_score[1] < -0.2:
             return 'This article is False'
         else:
-            return 'This article is probabli False'
+            return 'This article is possibly False'
