@@ -7,9 +7,7 @@ from ofnd.ml_logic.model import *
 
 def prep_split_data(raw_data):
 
-    selected_columns = preparation(raw_data)
-
-    X, y = X_y(selected_columns, TARGET_COLUMN)
+    X, y = X_y(raw_data, TARGET_COLUMN)
 
     X_train, X_test, y_train, y_test = split_data(X, y)
 
@@ -30,8 +28,9 @@ def predict(X_pred):
 
     model = load_model()
 
-    X_pred = preparation(X_pred)
+    prediction = model.predict(X_pred)[0]
+    score = pipeline.decision_function(X_pred)[0]
 
-    y_pred = model.predict(X_pred)
+    prediction_score = prediction, score
 
-    return y_pred
+    return prediction_score

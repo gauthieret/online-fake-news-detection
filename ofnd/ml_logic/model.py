@@ -27,16 +27,13 @@ def initialize_model():
     '''Function to restart a model when there is not model
     in LOCAL_REGISTRY_PATH'''
 
-    topic_pipe = Pipeline([('ohe', ohe)])
-
     text_pipe = Pipeline([
         ('cleaner', cleaner),
         ('tfidf_vectorizer', tfidf_vectorizer)
     ])
 
     preproc_pipe = ColumnTransformer([
-        ('topic_pipe', topic_pipe, ['subject']),
-        ('text_pipe', text_pipe, 'title_text'),
+        ('text_pipe', text_pipe, 'title_text')
     ])
 
     pipeline = make_pipeline(preproc_pipe, pac)

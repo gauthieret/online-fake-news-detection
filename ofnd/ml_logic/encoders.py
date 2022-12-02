@@ -23,8 +23,7 @@ text_pipe = Pipeline([
     ])
 
 preproc_pipe = ColumnTransformer([
-    ('topic_pipe', topic_pipe, ['subject']),
-    ('text_pipe', text_pipe, 'title_text'),
+    ('text_pipe', text_pipe, 'news')
 ])
 
 pipeline = make_pipeline(preproc_pipe, pac)
