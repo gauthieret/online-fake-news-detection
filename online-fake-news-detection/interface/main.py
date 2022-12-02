@@ -28,6 +28,9 @@ def predict(X_pred):
 
     model = load_model()
 
-    y_pred = model.predict(X_pred)
+    prediction = model.predict(X_pred)[0]
+    score = pipeline.decision_function(X_pred)[0]
 
-    return y_pred
+    prediction_score = prediction, score
+
+    return prediction_score
