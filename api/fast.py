@@ -3,7 +3,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from ofnd.interface.main import predict #function
 from ofnd.ml_logic.scraping_module import scraping #function
-from ofnd.ml_logic.classifier import labels #function
+from ofnd.ml_logic.classifier import label #function
 app = FastAPI()
 
 app.add_middleware(
