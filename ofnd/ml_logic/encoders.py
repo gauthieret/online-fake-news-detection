@@ -4,7 +4,7 @@ import numpy as np
 from sklearn.preprocessing import OneHotEncoder, FunctionTransformer
 from sklearn.compose import ColumnTransformer
 from sklearn.pipeline import make_pipeline, Pipeline
-from ml_logic.preprocessor import *
+from ofnd.ml_logic.preprocessor import *
 
 tfidf_vectorizer = TfidfVectorizer(max_df=0.7, min_df=0.2, max_features=5000)
 

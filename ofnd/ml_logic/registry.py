@@ -1,5 +1,5 @@
 import time
-from ml_logic.params import LOCAL_REGISTRY_PATH, MODEL_TARGET, BUCKET_NAME, DESTINATION_BLOB_NAME
+from ofnd.ml_logic.params import LOCAL_REGISTRY_PATH, MODEL_TARGET, BUCKET_NAME, DESTINATION_BLOB_NAME
 import os
 import glob
 from joblib import dump, load

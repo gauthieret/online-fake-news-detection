@@ -9,7 +9,7 @@ import pandas as pd
 from sklearn.linear_model import PassiveAggressiveClassifier
 from sklearn.feature_extraction.text import TfidfVectorizer
 import numpy as np
-from ml_logic.params import TARGET_COLUMN, TRUE_LOCAL_PATH, FAKE_LOCAL_PATH
+from ofnd.ml_logic.params import TARGET_COLUMN, TRUE_LOCAL_PATH, FAKE_LOCAL_PATH
 
 stop_words = set(stopwords.words('english')) ## define stopwords
 

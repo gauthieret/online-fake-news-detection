@@ -30,7 +30,12 @@ termcolor
 
 
 #preprocessing modules
-string
 nltk
 unidecode
+
+# FASTAPI
+fastapi
+uvicorn
+
+# Other
 trafilatura
