@@ -1,5 +1,5 @@
 import time
-from ml_logic.params import LOCAL_REGISTRY_PATH
+from ofnd.ml_logic.params import LOCAL_REGISTRY_PATH
 import os
 import glob
 from joblib import dump, load
