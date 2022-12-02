@@ -9,5 +9,10 @@
 
 import trafilatura
 from trafilatura import extract
-down = trafilatura.fetch_url('https://edition.cnn.com/2022/11/30/uk/china-embassy-uk-king-charles-gbr-intl/index.html')
-test_sample = pd.DataFrame({'news': [extract(down)]})
+
+def scrapping(url: str):
+
+    down = trafilatura.fetch_url(url)
+    test_sample = pd.DataFrame({'news': [extract(down)]})
+
+    return test_sample

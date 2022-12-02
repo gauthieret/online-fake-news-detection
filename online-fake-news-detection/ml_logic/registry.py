@@ -4,10 +4,11 @@ import os
 import glob
 from joblib import dump, load
 from google.cloud import storage
+from io import BytesIO
 
 
 
-def save_model (model=None, bucket_name=BUCKET_NAME, destination_blob_name=DESTINATION_BLOB_NAME):
+def save_model (model=None):
 
     timestamp = time.strftime("%Y%m%d-%H%M%S")
 
