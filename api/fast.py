@@ -1,9 +1,7 @@
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from ofnd.interface.main import predict #function
-from ofnd.ml_logic.scraping_module import scraping #function
-from ofnd.ml_logic.classifier import label #function
+from GEofnd.interface.main import predict
 app = FastAPI()
 
 app.add_middleware(
@@ -24,11 +22,14 @@ app.add_middleware(
 
 # http://127.0.0.1:8000/predict?pickup_datetime=2012-10-06 12:10:20&pickup_longitude=40.7614327&pickup_latitude=-73.9798156&dropoff_longitude=40.6513111&dropoff_latitude=-73.8803331&passenger_count=2
 @app.get("/predict")
-def predict(text =None, url=None):
-    if not text:
-        text=scraping(url)
-        score=predict([text])
-        return labels(score)
+def predict(text = None):
+#if it is a website
+    if text.startswith('http') or text.startswith('www'):
+        prediction = predict(text)
+        return prediction
+#if it is a text
+    else :
+        pass
         # The get request expects the URL input to be a string
     """
     we use type hinting to indicate the data types expected
