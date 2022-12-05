@@ -8,8 +8,9 @@ from GEofnd.ml_logic.classifier import result
 import pandas as pd
 
 
-df_dataset = getdata()
-url = "https://ec.europa.eu/commission/presscorner/detail/en/IP_22_7406"
+#ok = 'https://www.cnbc.com/2022/12/05/russia-ukraine-live-updates.html'
+#df_dataset = getdata()
+url = {"okey": "https://www.cnbc.com/2022/12/05/russia-ukraine-live-updates.html"}
 
 def prep_split_data(df=None):
 
@@ -31,6 +32,9 @@ def train(X = None, y = None):
     return
 
 def predict(url):
+
+
+    url = list(url.items())[0][1]
 
     #if its a website
     if url.startswith('http') or url.startswith('www'):
