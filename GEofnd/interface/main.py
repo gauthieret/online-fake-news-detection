@@ -31,34 +31,63 @@ def train(X = None, y = None):
 
 def predict(url):
 
-    model = load_model()
+    if url.startswith('http') or url.startswith('www'):
+        model = load_model()
 
-    url_df = scraping(url)
-    url_df['cleaned_news'] = url_df['news'].apply(clean)
+        url_df = scraping(url)
+        url_df['cleaned_news'] = url_df['news'].apply(clean)
 
 
 
-    prediction = model.predict(url_df['cleaned_news'])
-    predict_proba = model.predict_proba(url_df['cleaned_news'])
+        prediction = model.predict(url_df['cleaned_news'])
+        predict_proba = model.predict_proba(url_df['cleaned_news'])
 
-    if prediction[0] == True:
-        if predict_proba[0][1] > 0.70:
-            print("It's true!")
-        elif predict_proba[0][1] > 0.5:
-            print('Probably true')
-        elif predict_proba[0][1] <= 0.5:
-            print('possibly true dude')
+        if prediction[0] == True:
+            if predict_proba[0][1] > 0.70:
+                print("It's true!")
+            elif predict_proba[0][1] > 0.5:
+                print('Probably true')
+            elif predict_proba[0][1] <= 0.5:
+                print('possibly true dude')
 
-    elif prediction[0] == False:
-        if predict_proba[0][0] > 0.70:
-            print("It's a fake news")
-        elif predict_proba[0][0] > 0.5:
-            print('Probably fake')
-        elif predict_proba[0][1] <= 0.5:
-            print('Possibly fake')
+        elif prediction[0] == False:
+            if predict_proba[0][0] > 0.70:
+                print("It's a fake news")
+            elif predict_proba[0][0] > 0.5:
+                print('Probably fake')
+            elif predict_proba[0][1] <= 0.5:
+                print('Possibly fake')
+
+    else :
+
+        model = load_model()
+        url_df = pd.DataFrame({'news': [url]})
+
+        url_df['cleaned_news'] = url_df['news'].apply(clean)
+
+
+
+        prediction = model.predict(url_df['cleaned_news'])
+        predict_proba = model.predict_proba(url_df['cleaned_news'])
+
+        if prediction[0] == True:
+            if predict_proba[0][1] > 0.70:
+                print("It's true!")
+            elif predict_proba[0][1] > 0.5:
+                print('Probably true')
+            elif predict_proba[0][1] <= 0.5:
+                print('possibly true dude')
+
+        elif prediction[0] == False:
+            if predict_proba[0][0] > 0.70:
+                print("It's a fake news")
+            elif predict_proba[0][0] > 0.5:
+                print('Probably fake')
+            elif predict_proba[0][1] <= 0.5:
+                print('Possibly fake')
 
 
 if __name__ == '__main__':
-    prep_split_data(df_dataset)
-    train()
-#    predict(url)
+#    prep_split_data(df_dataset)
+#    train()
+    predict(url)
