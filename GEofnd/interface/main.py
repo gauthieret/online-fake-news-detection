@@ -10,8 +10,7 @@ import pandas as pd
 
 #ok = 'https://www.cnbc.com/2022/12/05/russia-ukraine-live-updates.html'
 #df_dataset = getdata()
-url = {"okey": "https://www.cnbc.com/2022/12/05/russia-ukraine-live-updates.html"}
-
+#url = input('tell me')
 def prep_split_data(df=None):
 
     df['cleaned_news'] = df[FEATURE_COLUMN].apply(clean)
@@ -34,7 +33,7 @@ def train(X = None, y = None):
 def predict(url):
 
 
-    url = list(url.items())[0][1]
+    # url = list(url.items())[0][1]
 
     #if its a website
     if url.startswith('http') or url.startswith('www'):
@@ -73,4 +72,5 @@ def predict(url):
 if __name__ == '__main__':
 #    prep_split_data(df_dataset)
 #    train()
-    predict(url)
+#   predict(url)
+    pass

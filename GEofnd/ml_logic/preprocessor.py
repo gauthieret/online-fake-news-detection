@@ -5,6 +5,10 @@ from nltk.corpus import stopwords
 import string
 import unidecode
 import nltk
+nltk.download('punkt')
+nltk.download('stopwords')
+nltk.download('wordnet')
+nltk.download('omw-1.4')
 import pandas as pd
 from GEofnd.ml_logic.encoders import MNB, CountVect
 import numpy as np
