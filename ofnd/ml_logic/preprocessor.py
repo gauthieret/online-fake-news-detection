@@ -10,6 +10,30 @@ from sklearn.linear_model import PassiveAggressiveClassifier
 from sklearn.feature_extraction.text import TfidfVectorizer
 import numpy as np
 from ofnd.ml_logic.params import TARGET_COLUMN, TRUE_LOCAL_PATH, FAKE_LOCAL_PATH
+from ofnd.ml_logic.params import MODEL_TYPE
+import json, re
+from tqdm import tqdm_notebook
+from uuid import uuid4
+from ofnd.ml_logic.encoders import embedding
+
+#tf modules
+import tensorflow as tf
+from tensorflow import keras
+import gensim.downloader as api
+from keras.preprocessing.sequence import pad_sequences
+import tensorflow_datasets as tfds
+from keras.preprocessing.text import text_to_word_sequence, Tokenizer
+from keras import layers, Sequential, optimizers, metrics, models
+
+## Torch Modules
+import torch
+import torch.optim as optim
+import torch.nn as nn
+import torch.nn.functional as F
+from torch.autograd import Variable
+from torch.utils.data import Dataset, DataLoader, RandomSampler, SequentialSampler
+from torch.utils.data import TensorDataset, random_split
+from transformers import RobertaTokenizer, get_linear_schedule_with_warmup
 
 stop_words = set(stopwords.words('english')) ## define stopwords
 
@@ -33,41 +57,98 @@ def preparation(df):
 
     return articles_df
 
+def removing_words(df):
+  list_of_words = ['Donald', 'Trump', 'Dont', 'donald', 'trump', 'dont']
+
+  pat = r'\b(?:{})\b'.format('|'.join(list_of_words))
+
+  df['news'] = df['news'].str.replace(pat, '')
+
+  return df
 
 def clean(sentence):
 
-    # Basic cleaning
-    sentence = sentence.strip() ## remove whitespaces
-    sentence = sentence.lower() ## lowercase
-    sentence = ''.join(char for char in sentence if not char.isdigit()) ## remove numbers
+    if MODEL_TYPE == 'tensorflow':
+        word2vec_transfer = api.load("glove-wiki-gigaword-50")
 
-    # Advanced cleaning
-    for punctuation in (string.punctuation + "…”"):
-        sentence = sentence.replace(punctuation, ' ') ## remove punctuation
+        X_embed = embedding(word2vec_transfer, sentence)
 
-    unaccented_string = unidecode.unidecode(sentence) # remove accents
+        X_pad = pad_sequences(X_embed, dtype='float32', padding='post', maxlen=200)
 
-    tokenized_sentence = word_tokenize(unaccented_string) ## tokenize
-    # stop_words = set(stopwords.words('english')) ## define stopwords
+        return X_pad
 
-    tokenized_sentence_cleaned = [ ## remove stopwords
-        w for w in tokenized_sentence if not w in stop_words
-            ]
+    if MODEL_TYPE == 'roberta':
+        roberta_tokenizer = RobertaTokenizer.from_pretrained("roberta-base")
 
-    lemmatized = [
-        WordNetLemmatizer().lemmatize(word, pos = "v")
-        for word in tokenized_sentence_cleaned
-    ]
+        sentences = sentence['news'].values
 
-    cleaned_sentence = ' '.join(word for word in lemmatized)
+        roberta_input_ids = []
+        roberta_attention_masks = []
+        sentence_ids = []
+        counter = 0
 
-    return cleaned_sentence
+        for sent in sentences:
+            roberta_encoded_dict = roberta_tokenizer.encode_plus(
+                        sent,                      # Sentence to encode.
+                        add_special_tokens = False, # Add '[CLS]' and '[SEP]'
+                        max_length = 120,           # Pad & truncate all sentences.
+                        pad_to_max_length = True,
+                        return_attention_mask = True,   # Construct attn. masks.
+                        return_tensors = 'pt')     # Return pytorch tensors.
+
+            roberta_input_ids.append(roberta_encoded_dict['input_ids'])
+
+            roberta_attention_masks.append(roberta_encoded_dict['attention_mask'])
+
+        roberta_input_ids = torch.cat(roberta_input_ids, dim=0)
+        roberta_attention_masks = torch.cat(roberta_attention_masks, dim=0)
+
+        batch_size = 32
+
+        prediction_data = TensorDataset(roberta_input_ids, roberta_attention_masks)
+        prediction_sampler = SequentialSampler(prediction_data)
+        prediction_dataloader = DataLoader(prediction_data, sampler=prediction_sampler, batch_size=batch_size)
+
+        return prediction_dataloader
+
+    if MODEL_TYPE == 'ml':
+        # Basic cleaning
+        sentence = sentence.strip() ## remove whitespaces
+        sentence = sentence.lower() ## lowercase
+        sentence = ''.join(char for char in sentence if not char.isdigit()) ## remove numbers
+
+        # Advanced cleaning
+        for punctuation in (string.punctuation + "…”"):
+            sentence = sentence.replace(punctuation, ' ') ## remove punctuation
+
+        unaccented_string = unidecode.unidecode(sentence) # remove accents
+
+        tokenized_sentence = word_tokenize(unaccented_string) ## tokenize
+        # stop_words = set(stopwords.words('english')) ## define stopwords
+
+        tokenized_sentence_cleaned = [ ## remove stopwords
+            w for w in tokenized_sentence if not w in stop_words
+                ]
+
+        lemmatized = [
+            WordNetLemmatizer().lemmatize(word, pos = "v")
+            for word in tokenized_sentence_cleaned
+        ]
+
+        cleaned_sentence = ' '.join(word for word in lemmatized)
+
+        return cleaned_sentence
 
 def clean_data(X):
-    if isinstance(X, pd.Series):
-        return X.apply(clean)
-    if isinstance(X, pd.DataFrame):
-        return X.applymap(clean)
+    if MODEL_TYPE == 'roberta':
+        return clean(X)
+    if MODEL_TYPE ==  'tensorflow':
+        return clean(X)
+    if MODEL_TYPE == 'ml':
+        if isinstance(X, pd.Series):
+            return X.apply(clean)
+        if isinstance(X, pd.DataFrame):
+            return X.applymap(clean)
 
 
 def X_y(df, TARGET_COLUMN):

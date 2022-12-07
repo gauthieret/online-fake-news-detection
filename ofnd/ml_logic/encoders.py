@@ -27,3 +27,20 @@ preproc_pipe = ColumnTransformer([
 ])
 
 pipeline = make_pipeline(preproc_pipe, pac)
+
+def embed_sentence_with_TF(word2vec, sentence):
+    embedded_sentence = []
+    for word in sentence:
+        if word in word2vec:
+            embedded_sentence.append(word2vec[word])
+
+    return np.array(embedded_sentence)
+
+def embedding(word2vec, sentences):
+    embed = []
+
+    for sentence in sentences:
+        embedded_sentence = embed_sentence_with_TF(word2vec, sentence)
+        embed.append(embedded_sentence)
+
+    return embed
