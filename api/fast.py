@@ -3,7 +3,6 @@ from fastapi.middleware.cors import CORSMiddleware
 from GEofnd.interface.main import predict
 import json
 app = FastAPI()
-
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],  # Allows all origins
@@ -25,8 +24,10 @@ def pred(text_or_url):
 
     #    check if textorurl is text; or url
     # .    if url, get the text
+
     prediction = predict(text_or_url)
     return {
         "text_or_url": text_or_url,
         "prediction": prediction,
         }
+
