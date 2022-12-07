@@ -1,7 +1,7 @@
 from sklearn.linear_model import PassiveAggressiveClassifier
 from sklearn.feature_extraction.text import TfidfVectorizer
 import numpy as np
-from ml_logic.encoders import *
+from ofnd.ml_logic.encoders import *
 
 
 

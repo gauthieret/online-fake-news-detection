@@ -6,30 +6,15 @@ import string
 import unidecode
 import nltk
 import pandas as pd
-from sklearn.linear_model import PassiveAggressiveClassifier
-from sklearn.feature_extraction.text import TfidfVectorizer
+from GEofnd.ml_logic.encoders import MNB, CountVect
 import numpy as np
-from ml_logic.params import TARGET_COLUMN, TRUE_LOCAL_PATH, FAKE_LOCAL_PATH
-
-stop_words = set(stopwords.words('english')) ## define stopwords
+from GEofnd.ml_logic.params import TARGET_COLUMN, FEATURE_COLUMN, DATASET_LOCAL_PATH
 
 
-
-
-def get_data(TRUE_LOCAL_PATH, FAKE_LOCAL_PATH):
-    fake_df = pd.read_csv(FAKE_LOCAL_PATH)
-    true_df = pd.read_csv(TRUE_LOCAL_PATH)
-    TRUE_LOCAL_PATH['True'] = 1
-    FAKE_LOCAL_PATH['True'] = 0
-    articles_df = pd.concat([true_df, fake_df])
-
-    return articles_df
-
-
-def preparation(df):
-
-    articles_df['title_text'] = articles_df['title'] + articles_df['text']
-    articles_df = articles_df.drop(columns= ['title', 'text', 'date'])
+def getdata():
+    #articles = "/Users/Gauthier/code/gauthieret/online-fake-news-detection/GE_ofnd/data/DS2_fakenews.csv"
+    #articles = "/Users/Gauthier/code/gauthieret/online-fake-news-detection/GE_ofnd/data/articles.csv"
+    articles_df = pd.read_csv(DATASET_LOCAL_PATH)
 
     return articles_df
 
@@ -48,7 +33,7 @@ def clean(sentence):
     unaccented_string = unidecode.unidecode(sentence) # remove accents
 
     tokenized_sentence = word_tokenize(unaccented_string) ## tokenize
-    # stop_words = set(stopwords.words('english')) ## define stopwords
+    stop_words = set(stopwords.words('english')) ## define stopwords
 
     tokenized_sentence_cleaned = [ ## remove stopwords
         w for w in tokenized_sentence if not w in stop_words
@@ -63,17 +48,16 @@ def clean(sentence):
 
     return cleaned_sentence
 
+
 def clean_data(X):
-    if isinstance(X, pd.Series):
-        return X.apply(clean)
-    if isinstance(X, pd.DataFrame):
-        return X.applymap(clean)
+    return X['news'].apply(clean)
 
 
-def X_y(df, TARGET_COLUMN):
-    X = df.drop([TARGET_COLUMN], axis=1)
+def X_y(df):
+    X = df[FEATURE_COLUMN]
     y = df[TARGET_COLUMN]
     return X, y
+
 
 
 def split_data(X, y):
@@ -84,16 +68,18 @@ def split_data(X, y):
     return X_train, X_test, y_train, y_test
 
 
-def train_vect(X):
 
-    tfidf_vectorizer = TfidfVectorizer(max_df=0.7)
-    tfidf = tfidf_vectorizer.fit(X)
-    return tfidf
+def fit_vect(X_train,y_train):
+
+    CountVect_fit = CountVect.fit(X_train,y_train)
+
+    return CountVect_fit
 
 
-def transform_vect(X):
 
-    tfidf_vectorizer = TfidfVectorizer(max_df=0.7)
-    tfidf = tfidf_vectorizer.transform(X)
+def transform_vect(X_train:pd.DataFrame, X_test:pd.DataFrame, y_train : pd.DataFrame):
 
-    return tfidf
+    X_tain_trans = fit_vect(X_train,y_train).transform(X_train)
+    X_test_trans = fit_vect(X_train,y_train).transform(X_test)
+
+    return X_tain_trans, X_test_trans

@@ -1,8 +1,8 @@
-from ml_logic.preprocessor import *
-from ml_logic.encoders import *
-from ml_logic.params import TARGET_COLUMN
-from ml_logic.registry import *
-from ml_logic.model import *
+from ofnd.ml_logic.preprocessor import *
+from ofnd.ml_logic.encoders import *
+from ofnd.ml_logic.params import TARGET_COLUMN
+from ofnd.ml_logic.registry import *
+from ofnd.ml_logic.model import *
 
 
 def prep_split_data(raw_data):
