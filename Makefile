@@ -53,3 +53,30 @@ pypi_test:
 
 pypi:
 	@twine upload dist/* -u $(PYPI_USERNAME)
+
+
+# ----------------------------------
+#      DOCKER STUFF
+# ----------------------------------
+
+docker-build-local:
+	docker build -t dockerapi:local .
+
+docker-run-local:
+	docker run -e PORT=8000 -p 8080:8000 --env-file .env dockerapi:local
+
+docker-build-cloud:
+	docker build -t $(GCR_MULTI_REGION)/$(PROJECT)/dockerapi:cloud .
+
+docker-build-cloud-mac:
+	mv Dockerfile Dockerfile-normal
+	mv Dockerfile-mac Dockerfile
+	docker build -t $(GCR_MULTI_REGION)/$(PROJECT)/dockerapi:cloud .
+	mv Dockerfile Dockerfile-mac
+	mv Dockerfile-normal Dockerfile
+
+docker-push:
+	docker push $(GCR_MULTI_REGION)/$(PROJECT)/dockerapi:cloud
+
+docker-deploy:
+	gcloud run deploy --image $(GCR_MULTI_REGION)/$(PROJECT)/dockerapi:cloud --region $(REGION) --env-vars-file .env.yaml

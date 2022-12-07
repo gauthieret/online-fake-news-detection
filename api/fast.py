@@ -25,6 +25,9 @@ def pred(text_or_url):
     #    check if textorurl is text; or url
     # .    if url, get the text
 
-    predicted_st = json.dumps(text_or_url)
-    prediction = predict(predicted_st)
-    return prediction
+    prediction = predict(text_or_url)
+    return {
+        "text_or_url": text_or_url,
+        "prediction": prediction,
+        }
+
