@@ -1,6 +1,6 @@
 from ofnd.ml_logic.preprocessor import *
 from ofnd.ml_logic.encoders import *
-from ofnd.ml_logic.params import TARGET_COLUMN
+from ofnd.ml_logic.params import TARGET_COLUMN, MODEL_TYPE
 from ofnd.ml_logic.registry import *
 from ofnd.ml_logic.model import *
 
@@ -27,10 +27,17 @@ def train(X, y):
 def predict(X_pred):
 
     model = load_model()
+    if MODEL_TYPE == 'ml':
 
-    prediction = model.predict(X_pred)[0]
-    score = pipeline.decision_function(X_pred)[0]
+        prediction = model.predict(X_pred)[0]
+        score = pipeline.decision_function(X_pred)[0]
 
-    prediction_score = prediction, score
+        prediction_score = prediction, score
 
-    return prediction_score
+        return prediction_score
+
+    if MODEL_TYPE == 'tensorflow':
+
+        prediction = model.predict(X_pred)[0][0]
+
+        return prediction
