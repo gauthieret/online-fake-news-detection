@@ -3,7 +3,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 import numpy as np
 from ofnd.ml_logic.encoders import *
 from ofnd.ml_logic.params import *
-from transformers import RobertaForSequenceClassification
+# from transformers import RobertaForSequenceClassification
 
 
 

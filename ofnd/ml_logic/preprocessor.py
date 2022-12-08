@@ -29,15 +29,15 @@ import tensorflow_datasets as tfds
 from keras.preprocessing.text import text_to_word_sequence, Tokenizer
 from keras import layers, Sequential, optimizers, metrics, models
 
-## Torch Modules
-import torch
-import torch.optim as optim
-import torch.nn as nn
-import torch.nn.functional as F
-from torch.autograd import Variable
-from torch.utils.data import Dataset, DataLoader, RandomSampler, SequentialSampler
-from torch.utils.data import TensorDataset, random_split
-from transformers import RobertaTokenizer, get_linear_schedule_with_warmup
+# ## Torch Modules
+# import torch
+# import torch.optim as optim
+# import torch.nn as nn
+# import torch.nn.functional as F
+# from torch.autograd import Variable
+# from torch.utils.data import Dataset, DataLoader, RandomSampler, SequentialSampler
+# from torch.utils.data import TensorDataset, random_split
+# from transformers import RobertaTokenizer, get_linear_schedule_with_warmup
 
 stop_words = set(stopwords.words('english')) ## define stopwords
 
@@ -82,6 +82,8 @@ def clean(sentence):
         return X_pad
 
     if MODEL_TYPE == 'roberta':
+        print("Roberta was excluded")
+        return 'Excluded'
         roberta_tokenizer = RobertaTokenizer.from_pretrained("roberta-base")
 
         sentences = sentence['news'].values
@@ -145,6 +147,8 @@ def clean(sentence):
 
 def clean_data(X):
     if MODEL_TYPE == 'roberta':
+        print("Roberta was excluded")
+        return 'Excluded'
         return clean(X)
     if MODEL_TYPE ==  'tensorflow':
         return clean(X)

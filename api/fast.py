@@ -83,8 +83,8 @@ def predproba(text_or_url):
          "proba": prediction_result,
          }
 
-@app.get("/ ")
-def home():
+@app.get("/")
+def root():
     return {
         "endpoints": ['/pred', '/predproba']
     }

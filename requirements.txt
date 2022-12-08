@@ -45,5 +45,5 @@ uvicorn
 trafilatura
 gensim
 tensorflow_datasets
-torch
-transformers
+# torch
+# transformers
