@@ -55,3 +55,36 @@ def pred(text_or_url):
          "text_or_url": text_or_url,
          "prediction": outcome,
          }
+
+@app.get("/predprob ")
+def predproba(text_or_url):
+
+    #    check if textorurl is text; or url
+    # .    if url, get the text
+    print("Now checking text_or_url")
+    if text_or_url[:7] == 'http://' or text_or_url[:8] == 'https://':
+        print("Now going to scrape the text")
+        text = scraping(text_or_url)
+    else:
+        text =  pd.DataFrame({'news': [text_or_url]})
+    if text.empty:
+        return { "error": 'No text scraped' }
+    print("Now going to clean the text")
+    preprocessed_text = clean_data(text)
+    if preprocessed_text.size == 0:
+        return { "error": 'No preprocessed text' }
+    print("Now going to predict")
+    prediction_result = predict(preprocessed_text)
+    if not prediction_result:
+        return { "error": 'No prediction result' }
+
+    return {
+         "text_or_url": text_or_url,
+         "proba": prediction_result,
+         }
+
+@app.get("/ ")
+def home():
+    return {
+        "endpoints": ['/pred', '/predproba']
+    }
