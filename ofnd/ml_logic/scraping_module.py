@@ -6,7 +6,7 @@
 # article.html
 # article.parse
 # article.text
-
+import pandas as pd
 import trafilatura
 from trafilatura import extract
 
