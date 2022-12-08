@@ -40,6 +40,7 @@ def load_model():
     if MODEL_TARGET == 'local':
 
         model_directory = os.path.join(LOCAL_REGISTRY_PATH, "models")
+
         results = glob.glob(f"{model_directory}/*")
         if not results:
 

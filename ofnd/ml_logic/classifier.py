@@ -23,3 +23,5 @@ def label(prediction_score):
             return 'This article is possibly False'
         if prediction_score < 0.5:
             return 'This article is False'
+
+    return 'Something went wrong'

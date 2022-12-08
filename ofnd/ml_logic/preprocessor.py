@@ -2,6 +2,11 @@ from sklearn.model_selection import train_test_split
 from nltk.stem import WordNetLemmatizer
 from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
+import nltk
+nltk.download('punkt')
+nltk.download('stopwords')
+nltk.download('wordnet')
+nltk.download('omw-1.4')
 import string
 import unidecode
 import nltk
@@ -14,13 +19,12 @@ from ofnd.ml_logic.params import MODEL_TYPE
 import json, re
 from tqdm import tqdm_notebook
 from uuid import uuid4
-from ofnd.ml_logic.encoders import embedding
 
 #tf modules
 import tensorflow as tf
 from tensorflow import keras
 import gensim.downloader as api
-from keras.preprocessing.sequence import pad_sequences
+from tensorflow.keras.preprocessing.sequence import pad_sequences
 import tensorflow_datasets as tfds
 from keras.preprocessing.text import text_to_word_sequence, Tokenizer
 from keras import layers, Sequential, optimizers, metrics, models
@@ -73,7 +77,7 @@ def clean(sentence):
 
         X_embed = embedding(word2vec_transfer, sentence)
 
-        X_pad = pad_sequences(X_embed, dtype='float32', padding='post', maxlen=200)
+        X_pad = pad_sequences(X_embed, dtype='float32', padding='post', maxlen=100)
 
         return X_pad
 
@@ -178,3 +182,21 @@ def transform_vect(X):
     tfidf = tfidf_vectorizer.transform(X)
 
     return tfidf
+
+
+def embed_sentence_with_TF(word2vec, sentence):
+    embedded_sentence = []
+    for word in sentence:
+        if word in word2vec:
+            embedded_sentence.append(word2vec[word])
+
+    return np.array(embedded_sentence)
+
+def embedding(word2vec, sentences):
+    embed = []
+
+    for sentence in sentences:
+        embedded_sentence = embed_sentence_with_TF(word2vec, sentence)
+        embed.append(embedded_sentence)
+
+    return embed
