@@ -86,6 +86,6 @@ def load_model():
 
     if MODEL_TYPE == 'tensorflow':
 
-        model = tf.keras.models.load_model('gs://bucket-fake-news-301122/models/tensor_flow_models/tf_model')
+        model = tf.keras.models.load_model('gs://{BUCKET_NAME}/{TF_DEST_BLOB_NAME}tf_model')
 
         return model
