@@ -1,18 +1,18 @@
-# from newspaper import Article
-# url = 'www.eeas.europa.eu/eeas/upholding-and-strengthening-international-non-proliferation-and-disarmament-architecture_en'
-# article = Article(url)
 
-# article.download()
-# article.html
-# article.parse
-# article.text
 import pandas as pd
 import trafilatura
 from trafilatura import extract
+from trafilatura.settings import use_config
+
 
 def scraping(url: str):
-
+    # Solution for signal / thread error
+    config = use_config()
+    config.set("DEFAULT", "EXTRACTION_TIMEOUT", "0")
     down = trafilatura.fetch_url(url)
-    test_sample = pd.DataFrame({'news': [extract(down)]})
+    scraped_df = pd.DataFrame({'news': [extract(down, config=config)]})
 
-    return test_sample
+    return scraped_df
+
+if __name__ == '__main__':
+     print(scraping('https://www.cnbc.com/2022/12/05/russia-ukraine-live-updates.html'))
